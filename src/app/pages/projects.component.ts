@@ -33,17 +33,17 @@ interface Project {
 <section class="projects-hero py-20 bg-gradient-to-br from-white via-purple-50 to-indigo-50 dark:from-secondary-900 dark:via-secondary-800 dark:to-secondary-900">
   <div class="container mx-auto px-6">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="hero-title text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-        Featured <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Projects</span>
+      <h1 class="hero-title text-5xl md:text-6xl font-bold text-white dark:text-white mb-6">
+        Featured <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-700">Projects</span>
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-        A showcase of my professional work spanning enterprise applications, ERP systems, and innovative web platforms built with modern technologies.
+      <p class="text-xl text-white dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+        Selected projects from my work: web and native apps, PWAs, and automation tools delivered for clients and personal initiatives.
       </p>
       <div class="mt-8 inline-flex items-center bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-6 py-3 rounded-full font-semibold">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
         </svg>
-        {{getProjectsCount()}}+ Projects Delivered
+        5 Projects Delivered
       </div>
     </div>
   </div>
@@ -253,20 +253,90 @@ export class ProjectsComponent implements OnInit {
   }
 
   private initializeAnimations(): void {
-    // Hero section animations
-    this.animationService.fadeIn('.hero-title', { delay: 0.3 });
+    // ===== ANIMATION 4: Text Reveal on Hero =====
+    this.animationService.textReveal('.hero-title', { stagger: 0.05, duration: 1 });
+    this.animationService.fadeIn('.hero-subtitle', { delay: 0.5 });
     
-    // Filter animations
-    this.animationService.staggerIn('button', { delay: 0.5, stagger: 0.1 });
+    // ===== ANIMATION 6: Floating Count Animation =====
+    this.animationService.floatingAnimation('.projects-count', { y: 15, duration: 2 });
     
-    // Project cards animations
-    this.animationService.scrollTriggerAnimation('.project-card', {
-      trigger: '.projects-grid-section',
-      stagger: 0.2
+    // ===== ANIMATION 5: Floating Animation on Filter Buttons =====
+    document.querySelectorAll('.filter-section button').forEach((button, index) => {
+      if (button instanceof HTMLElement) {
+        this.animationService.magneticEffect(button, 0.2);
+        // Add subtle floating to selected filter
+        if (this.activeFilter() === (button as any).dataset.filter) {
+          this.animationService.floatingElementAnimation(button, {
+            floatY: 3,
+            rotation: 0,
+            duration: 2.5,
+            delay: 0.1 * index
+          });
+        }
+      }
     });
     
-    // CTA section animation
-    this.animationService.scrollTriggerAnimation('.cta-section');
+    // ===== ANIMATION 2 & 3: Project Cards with Staggered Entrance + Hover Effect =====
+    document.querySelectorAll('.project-card').forEach((card, index) => {
+      if (card instanceof HTMLElement) {
+        // Staggered entrance with rotation (ANIMATION 2)
+        this.animationService.scrollTriggerAnimation(card, {
+          trigger: '.projects-grid-section',
+          delay: index * 0.2,
+          start: "top 85%"
+        });
+        
+        // Card hover effect (ANIMATION 3)
+        this.animationService.cardHoverEffect(card, {
+          scaleAmount: 1.08,
+          shadowIntensity: 28
+        });
+        
+        // Parallax effect on project images
+        const image = card.querySelector('img');
+        if (image instanceof HTMLElement) {
+          this.animationService.parallaxScroll(image, 0.2);
+        }
+        
+        // Counter animations for project stats (ANIMATION 6)
+        card.querySelectorAll('.stat-number').forEach(stat => {
+          if (stat instanceof HTMLElement) {
+            const value = parseInt(stat.textContent || '0', 10);
+            this.animationService.animateCounter(stat, value, {
+              duration: 2,
+              suffix: stat.textContent?.includes('+') ? '+' : ''
+            });
+          }
+        });
+      }
+    });
+    
+    // Add glitch effect on hover for project titles
+    document.querySelectorAll('.project-card h3').forEach(title => {
+      if (title instanceof HTMLElement) {
+        title.addEventListener('mouseenter', () => {
+          this.animationService.glitchEffect(title, { duration: 0.3, intensity: 3 });
+        });
+      }
+    });
+    
+    // ===== ANIMATION 2: Staggered Entrance for Tech Badges =====
+    this.animationService.staggerIn('.project-card .technologies span', {
+      stagger: 0.05,
+      scrollTrigger: {
+        trigger: '.projects-grid-section',
+        start: "top 70%"
+      }
+    });
+    
+    // Enhanced CTA section animation
+    this.animationService.scrollTriggerAnimation('.cta-section', {
+      start: "top 80%",
+      onEnter: () => {
+        // Add gradient text animation
+        this.animationService.scrollTextAnimation('.cta-section h2');
+      }
+    });
   }
 
   getProjectsCount(): number {
@@ -276,10 +346,8 @@ export class ProjectsComponent implements OnInit {
   getProjectFilters() {
     return [
       { id: 'all', label: 'All Projects' },
-      { id: 'enterprise', label: 'Enterprise' },
-      { id: 'web-app', label: 'Web Applications' },
-      { id: 'ecommerce', label: 'E-commerce' },
-      { id: 'mobile', label: 'Mobile Apps' }
+      { id: 'enterprise', label: 'Enterprise Systems' },
+      { id: 'web-app', label: 'Web Applications' }
     ];
   }
 
@@ -302,178 +370,129 @@ export class ProjectsComponent implements OnInit {
     return [
       {
         id: 1,
-        title: "NavYojana ERP System",
-        client: "Indian Navy",
-        type: "Enterprise ERP",
+        title: "Purchase Store & Logistics Management System",
+        client: "Client / WordPress Project",
+        type: "Web Application",
         category: "enterprise",
         status: "Completed",
-        statusClass: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-        description: "Comprehensive Enterprise Resource Planning system developed for the Indian Navy to manage personnel, operations, and administrative tasks. Built with modern web technologies to handle complex military workflows.",
-        image: "/assets/images/projects/navyojana.svg",
-        gradientBg: "from-blue-600 to-navy-800",
+        statusClass: "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200",
+        description: "Modules for purchase store and logistics management built using WordPress with custom plugins and workflows. Led a small team to deliver the solution.",
+        image: "/assets/images/projects/purchase-logistics.jpg",
+        gradientBg: "from-blue-600 to-indigo-600",
         features: [
-          "Personnel Management System with hierarchical access control",
-          "Multi-module architecture covering HR, Finance, and Operations",
-          "Real-time dashboard with advanced analytics and reporting",
-          "Role-based authentication and authorization system",
-          "Document management and approval workflows",
-          "Integration with existing military systems and protocols"
+          "Purchase & inventory modules",
+          "Logistics tracking and reporting",
+          "Custom WordPress plugins",
+          "Team-led delivery and client coordination",
+          "Export/import and reporting features"
         ],
-        technologies: ["Angular", "TypeScript", "Node.js", "MongoDB", "Express.js", "JWT", "Bootstrap", "Chart.js"],
+        technologies: ["WordPress", "PHP", "JavaScript", "MySQL"],
         stats: [
-          { label: "Active Users", value: "1000+" },
-          { label: "Modules", value: "12" },
-          { label: "Data Records", value: "50K+" },
-          { label: "Uptime", value: "99.9%" }
+          { label: "Team Size", value: "5" },
+          { label: "Modules", value: "6+" }
         ],
-        liveUrl: null,
-        githubUrl: null
+        liveUrl: undefined,
+        githubUrl: undefined
       },
       {
         id: 2,
-        title: "Courtyardly Artist Platform",
-        client: "Courtyardly Inc.",
-        type: "Creative Platform",
+        title: "Sticky Notes (PWA)",
+        client: "Personal Project",
+        type: "Progressive Web App",
         category: "web-app",
         status: "Completed",
         statusClass: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-        description: "Digital platform connecting artists with art enthusiasts, featuring portfolio showcases, commission management, and integrated payment systems. Designed to empower creative professionals.",
-        image: "/assets/images/projects/courtyardly.svg",
-        gradientBg: "from-purple-600 to-pink-600",
+        description: "A Progressive Web App that supports offline note creation, local storage sync, and installable experience for quick note-taking.",
+        image: "/assets/images/projects/sticky-notes.jpg",
+        gradientBg: "from-green-600 to-teal-600",
         features: [
-          "Artist portfolio management with media galleries",
-          "Commission request and project management system",
-          "Integrated payment processing with Stripe",
-          "Real-time messaging between artists and clients",
-          "Advanced search and filtering for artwork discovery",
-          "Social features including likes, comments, and follows"
+          "Offline support via Service Workers",
+          "Local storage and sync",
+          "Add/edit/delete notes with tags",
+          "Installable PWA experience"
         ],
-        technologies: ["Angular", "TypeScript", "Node.js", "MongoDB", "Stripe API", "Socket.io", "Tailwind CSS", "AWS S3"],
+        technologies: ["JavaScript", "Service Workers", "HTML5", "CSS3"],
         stats: [
-          { label: "Artists", value: "500+" },
-          { label: "Artworks", value: "5K+" },
-          { label: "Commissions", value: "200+" },
-          { label: "Countries", value: "25+" }
+          { label: "Offline Ready", value: "Yes" },
+          { label: "Notes Stored", value: "100+" }
         ],
-        liveUrl: "https://courtyardly.com",
-        githubUrl: null
+        liveUrl: undefined,
+        githubUrl: undefined
       },
       {
         id: 3,
-        title: "MeetWise Scheduling App",
-        client: "MeetWise Solutions",
-        type: "Productivity App",
+        title: "Mind Trainer",
+        client: "Personal Project",
+        type: "Mobile / Web App",
         category: "web-app",
         status: "Completed",
-        statusClass: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-        description: "Smart meeting scheduling application with AI-powered time optimization, calendar integration, and automated reminder systems. Streamlines professional meeting coordination.",
-        image: "/assets/images/projects/meetwise.svg",
-        gradientBg: "from-green-600 to-teal-600",
+        statusClass: "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200",
+        description: "Logic-based arithmetic training app designed to improve cognitive skills with progressive difficulty levels and scoring.",
+        image: "/assets/images/projects/mind-trainer.jpg",
+        gradientBg: "from-purple-600 to-pink-600",
         features: [
-          "Smart scheduling with conflict detection",
-          "Calendar integration (Google, Outlook, Apple)",
-          "Automated email and SMS reminders",
-          "Video conferencing integration (Zoom, Teams)",
-          "Analytics dashboard for meeting insights",
-          "Mobile-responsive design for on-the-go access"
+          "Configurable difficulty levels",
+          "Scoring and progress tracking",
+          "Timer-based challenges",
+          "Lightweight and responsive UI"
         ],
-        technologies: ["Angular", "TypeScript", "Python", "Django", "PostgreSQL", "Redis", "Twilio", "Google Calendar API"],
+        technologies: ["JavaScript", "HTML5", "CSS3"],
         stats: [
-          { label: "Meetings Scheduled", value: "10K+" },
-          { label: "Active Users", value: "2K+" },
-          { label: "Time Saved", value: "500+ hrs" },
-          { label: "Success Rate", value: "98%" }
+          { label: "Levels", value: "20+" },
+          { label: "Sessions", value: "500+" }
         ],
-        liveUrl: "https://meetwise.app",
-        githubUrl: null
+        liveUrl: undefined,
+        githubUrl: undefined
       },
       {
         id: 4,
-        title: "E-commerce Dashboard",
-        client: "Retail Solutions Ltd.",
-        type: "Admin Dashboard",
-        category: "ecommerce",
+        title: "e-Kshiralayh",
+        client: "NGO / Farmers App",
+        type: "Native Mobile App",
+        category: "web-app",
         status: "Completed",
-        statusClass: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-        description: "Comprehensive admin dashboard for e-commerce operations including inventory management, order processing, customer analytics, and sales reporting.",
-        image: "/assets/images/projects/ecommerce-dashboard.svg",
-        gradientBg: "from-orange-600 to-red-600",
+        statusClass: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200",
+        description: "A native app for dairy farmer registration and livestock product management, enabling simple onboarding and product listings.",
+        image: "/assets/images/projects/ekshiralayh.jpg",
+        gradientBg: "from-yellow-500 to-orange-500",
         features: [
-          "Real-time inventory tracking and management",
-          "Order processing and fulfillment workflows",
-          "Customer analytics and segmentation",
-          "Sales reporting with advanced charts",
-          "Product catalog management",
-          "Multi-store support and management"
+          "Farmer registration and profiles",
+          "Product management and listings",
+          "Offline-first data capture",
+          "Simple native UX for field use"
         ],
-        technologies: ["Vue.js", "JavaScript", "Laravel", "MySQL", "Redis", "Chart.js", "Bootstrap", "AWS"],
+        technologies: ["Kotlin", "Android", "SQLite"],
         stats: [
-          { label: "Orders Processed", value: "25K+" },
-          { label: "Products Managed", value: "5K+" },
-          { label: "Revenue Tracked", value: "$1M+" },
-          { label: "Stores", value: "15+" }
+          { label: "Registered Farmers", value: "100+" }
         ],
-        liveUrl: null,
-        githubUrl: null
+        liveUrl: undefined,
+        githubUrl: undefined
       },
       {
         id: 5,
-        title: "Healthcare Management System",
-        client: "Medicalwale",
-        type: "Healthcare Platform",
-        category: "web-app",
+        title: "Computer Lab Auto Controller",
+        client: "Personal / Institutional",
+        type: "Automation Tool",
+        category: "enterprise",
         status: "Completed",
-        statusClass: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200",
-        description: "Digital healthcare platform enabling patient-doctor interactions, appointment scheduling, medical records management, and telemedicine consultations.",
-        image: "/assets/images/projects/healthcare.svg",
-        gradientBg: "from-blue-600 to-cyan-600",
+        statusClass: "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200",
+        description: "Automation modules for controlling and monitoring a computer lab environment, including scheduling and remote control features.",
+        image: "/assets/images/projects/lab-controller.jpg",
+        gradientBg: "from-gray-600 to-gray-800",
         features: [
-          "Patient registration and profile management",
-          "Doctor dashboard with appointment scheduling",
-          "Electronic health records (EHR) system",
-          "Video consultation integration",
-          "Prescription management and e-prescriptions",
-          "Payment integration for consultation fees"
+          "Remote control and scheduling",
+          "Monitoring and alerts",
+          "Automated startup/shutdown sequences",
+          "User-level access controls"
         ],
-        technologies: ["Angular", "TypeScript", "Node.js", "MongoDB", "WebRTC", "Socket.io", "Stripe", "Bootstrap"],
+        technologies: ["Python", "Flask", "SQLite", "Shell Scripts"],
         stats: [
-          { label: "Patients", value: "3K+" },
-          { label: "Doctors", value: "150+" },
-          { label: "Consultations", value: "8K+" },
-          { label: "Prescriptions", value: "5K+" }
+          { label: "Machines Controlled", value: "30+" }
         ],
-        liveUrl: null,
-        githubUrl: null
+        liveUrl: undefined,
+        githubUrl: undefined
       },
-      {
-        id: 6,
-        title: "Mobile Banking App",
-        client: "FinTech Innovations",
-        type: "Mobile Application",
-        category: "mobile",
-        status: "In Development",
-        statusClass: "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200",
-        description: "Secure mobile banking application with modern UI/UX, featuring account management, fund transfers, bill payments, and investment tracking.",
-        image: "/assets/images/projects/mobile-banking.svg",
-        gradientBg: "from-indigo-600 to-purple-600",
-        features: [
-          "Secure biometric authentication",
-          "Real-time account balance and transaction history",
-          "Instant fund transfers and bill payments",
-          "Investment portfolio tracking",
-          "Expense categorization and budgeting tools",
-          "Push notifications for important updates"
-        ],
-        technologies: ["React Native", "TypeScript", "Node.js", "PostgreSQL", "Redux", "Firebase", "Plaid API"],
-        stats: [
-          { label: "Beta Users", value: "500+" },
-          { label: "Transactions", value: "2K+" },
-          { label: "Security Score", value: "A+" },
-          { label: "App Rating", value: "4.8" }
-        ],
-        liveUrl: null,
-        githubUrl: null
-      }
+      
     ];
   }
 }

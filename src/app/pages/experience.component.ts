@@ -2,6 +2,7 @@ import { Component, signal, inject, OnInit, afterNextRender, ChangeDetectionStra
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnimationService } from '../services/animation.service';
+import { experienceData } from '../data/experience';
 
 @Component({
   selector: 'app-experience',
@@ -14,17 +15,17 @@ import { AnimationService } from '../services/animation.service';
 <section class="experience-hero py-20 bg-gradient-to-br from-white via-blue-50 to-indigo-50 dark:from-secondary-900 dark:via-secondary-800 dark:to-secondary-900">
   <div class="container mx-auto px-6">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="hero-title text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+      <h1 class="hero-title text-5xl md:text-6xl font-bold text-white dark:text-white mb-6">
         Professional <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Experience</span>
       </h1>
-      <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
-        4+ years of professional development experience across diverse industries, from healthcare to defense, building scalable web applications and ERP systems.
+      <p class="text-xl text-white dark:text-gray-300 leading-relaxed max-w-3xl mx-auto">
+        2+ years of professional development experience building scalable web applications and APIs using modern frontend and backend technologies.
       </p>
       <div class="mt-8 inline-flex items-center bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-6 py-3 rounded-full font-semibold">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
         </svg>
-        {{getTotalExperience()}} Years of Experience
+          {{getTotalExperience()}} Years of Experience
       </div>
     </div>
   </div>
@@ -287,31 +288,25 @@ export class ExperienceComponent implements OnInit {
   }
 
   getTotalExperience(): string {
-    return "1";
+    return "2+";
   }
 
   getExperiences() {
-    return [
-      {
-        id: 1,
-        company: "EPPS Infotech Pvt. Ltd.",
-        location: "Pune, India",
-        position: "UI Developer",
-        duration: "Apr 2024 - Present",
-        description: "Developing and maintaining responsive Angular-based applications with emphasis on scalability and performance.",
-        companyInitials: "EI",
-        companyColor: "from-blue-500 to-blue-700",
-        dotColor: "from-blue-500 to-blue-700",
-        achievements: [
-          "Developed and maintained responsive Angular-based applications",
-          "Integrated REST APIs and handled data rendering between front-end and back-end",
-          "Worked on NAVYOJNA, a management system for Indian Navy Dockyard operations",
-          "Implemented NPM scripts for efficient build and deployment",
-          "Followed MVC/MVVM architecture and optimized UI components"
-        ],
-        technologies: ["Angular", "TypeScript", "Micro Frontend", "Bootstrap", "REST APIs", "NPM Scripts"]
-      }
-    ];
+    // Map central experienceData signal to the component format used in the template
+    return experienceData().map((exp, index) => ({
+      id: index + 1,
+      company: exp.company,
+      location: exp.location,
+      position: exp.role,
+      duration: exp.duration,
+      // Use the first line of description as short summary and keep full list as achievements
+      description: (exp.description && exp.description.length > 0) ? exp.description[0] : '',
+      companyInitials: exp.company.split(' ').slice(0,2).map(s => s[0] || '').join('').toUpperCase(),
+      companyColor: index === 0 ? 'from-indigo-500 to-indigo-700' : 'from-green-500 to-emerald-600',
+      dotColor: index === 0 ? 'from-indigo-500 to-indigo-700' : 'from-green-500 to-emerald-600',
+      achievements: exp.description || [],
+      technologies: exp.technologies || []
+    }));
   }
 
   getSkillCategories() {
@@ -348,23 +343,23 @@ export class ExperienceComponent implements OnInit {
       {
         id: 1,
         icon: "💼",
-        value: 1,
-        suffix: "",
-        label: "Year Experience",
+        value: 2,
+        suffix: "+",
+        label: "Years Experience",
         description: "Professional development"
       },
       {
         id: 2,
         icon: "🏢",
-        value: 1,
+        value: 2,
         suffix: "",
-        label: "Company",
-        description: "EPPS Infotech"
+        label: "Companies",
+        description: "Worked with"
       },
       {
         id: 3,
         icon: "🚀",
-        value: 3,
+        value: 5,
         suffix: "",
         label: "Projects",
         description: "Successfully delivered"
@@ -372,7 +367,7 @@ export class ExperienceComponent implements OnInit {
       {
         id: 4,
         icon: "🛠️",
-        value: 15,
+        value: 18,
         suffix: "+",
         label: "Technologies",
         description: "Mastered & used"

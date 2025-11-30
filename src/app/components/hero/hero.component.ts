@@ -1,78 +1,257 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, afterNextRender } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AnimationService } from '../../services/animation.service';
+import { TechBgComponent } from '../tech-bg/tech-bg.component';
 
 @Component({
   selector: 'app-hero',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, TechBgComponent],
   template: `
-    <section class="bg-gradient-to-r from-blue-600 to-purple-700 text-white">
-      <div class="container mx-auto px-6 py-24">
-        <div class="flex flex-col lg:flex-row items-center">
-          <div class="lg:w-1/2 lg:pr-12">
-            <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
-              Build Your Perfect
-              <span class="text-yellow-300">CV</span>
-              in Minutes
+    <section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
+      <!-- Tech Background -->
+      <app-tech-bg />
+      
+      <!-- Glass Card Container -->
+      <div class="hero-content relative z-10 w-full max-w-6xl mx-auto px-6">
+        <div class="glass-card bg-white/10 dark:bg-secondary-900/30 backdrop-blur-lg rounded-3xl p-8 md:p-12 shadow-2xl border border-white/20 dark:border-secondary-700/20">
+          <div class="text-center">
+            <!-- Name and Title -->
+            <h1 class="hero-title text-5xl md:text-7xl font-bold text-secondary-800 dark:text-white mb-6">
+              Hi, I'm <span class="hero-name-gradient bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">Priyanka Nandkishor Malikar</span>
             </h1>
-            <p class="text-xl mb-8 text-blue-100">
-              Create professional, ATS-friendly resumes with our intuitive CV builder. 
-              Stand out from the crowd and land your dream job.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4">
-              <button 
-                routerLink="/dashboard"
-                class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-semibold hover:bg-yellow-300 transition-colors">
-                Get Started Free
-              </button>
-              <button 
-                routerLink="/about"
-                class="border-2 border-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
-                Learn More
-              </button>
-            </div>
-          </div>
-          <div class="lg:w-1/2 mt-12 lg:mt-0">
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-              <div class="space-y-6">
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8 text-blue-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold">Professional Templates</h3>
-                    <p class="text-blue-100">Choose from expertly designed templates</p>
-                  </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8 text-blue-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold">ATS Optimized</h3>
-                    <p class="text-blue-100">Pass through applicant tracking systems</p>
-                  </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                  <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <svg class="w-8 h-8 text-blue-900" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="text-lg font-semibold">Easy to Use</h3>
-                    <p class="text-blue-100">Build your CV with our intuitive editor</p>
-                  </div>
-                </div>
+            
+            <div class="hero-subtitle mb-8">
+              <p class="text-xl md:text-2xl text-secondary-700 dark:text-gray-300 mb-4">
+                Software Developer | Angular | JavaScript | TypeScript | Python | SQL
+              </p>
+              <div class="typed-text text-lg text-primary-600 dark:text-primary-400 font-medium h-8 overflow-hidden">
+                <span id="typed-output"></span>
               </div>
+            </div>
+            
+            <!-- Description -->
+            <p class="hero-description text-lg text-secondary-600 dark:text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed">
+              I craft digital experiences that blend innovative design with robust functionality. 
+              Passionate about creating solutions that make a real impact in the digital world.
+            </p>
+            
+            <!-- Tech Stack Icons -->
+            <div class="tech-stack flex flex-wrap justify-center gap-4 mb-12">
+              <div *ngFor="let tech of techStack" 
+                   class="tech-icon w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500/10 to-accent-500/10 dark:from-primary-500/5 dark:to-accent-500/5 
+                          backdrop-blur-sm border border-white/20 dark:border-secondary-700/20 flex items-center justify-center
+                          transform hover:scale-110 transition-transform duration-300">
+                <span class="text-2xl">{{ tech.icon }}</span>
+              </div>
+            </div>
+            
+            <!-- CTA Buttons -->
+            <div class="hero-buttons flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+              <a routerLink="/projects" 
+                 class="cta-primary bg-gradient-to-r from-primary-500 to-accent-500 text-white px-8 py-4 rounded-full font-semibold 
+                        transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25 hover:scale-105">
+                <span class="flex items-center">
+                  View My Work
+                  <svg class="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" 
+                       fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                  </svg>
+                </span>
+              </a>
+              
+              <a routerLink="/contact" 
+                 class="cta-secondary bg-white/10 dark:bg-secondary-800/30 backdrop-blur-sm border border-white/20 dark:border-secondary-700/20 
+                        text-secondary-800 dark:text-white px-8 py-4 rounded-full font-semibold 
+                        transition-all duration-300 hover:bg-white/20 dark:hover:bg-secondary-800/50 hover:scale-105">
+                <span class="flex items-center">
+                  <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                          d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                  </svg>
+                  Let's Talk
+                </span>
+              </a>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div class="flex flex-col items-center animate-bounce">
+          <span class="text-sm text-secondary-500 dark:text-gray-400 mb-2">Scroll to explore</span>
+          <svg class="w-6 h-6 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </div>
+      </div>
     </section>
-  `
+  `,
+  styles: [`
+    .glass-card {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .tech-icon {
+      animation: float 3s ease-in-out infinite;
+      animation-delay: calc(var(--delay) * 0.2s);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, rgb(239 246 255 / 0.8) 0%, rgb(248 250 252 / 0.8) 100%);
+    }
+
+    :host-context(.dark) .hero-section {
+      background: linear-gradient(135deg, rgb(15 23 42 / 0.8) 0%, rgb(30 41 59 / 0.8) 100%);
+    }
+  `]
 })
-export class HeroComponent {}
+export class HeroComponent implements OnInit {
+  private animationService = inject(AnimationService);
+
+  techStack = [
+    { icon: '🅰️', label: 'Angular' },
+    { icon: '🔷', label: 'TypeScript' },
+    { icon: '📜', label: 'JavaScript' },
+    { icon: '🐍', label: 'Python' },
+    { icon: '🗄️', label: 'SQL' },
+    { icon: '🔗', label: 'REST APIs' }
+  ];
+
+  constructor() {
+    afterNextRender(() => {
+      this.initializeAnimations();
+      this.initializeTypedText();
+    });
+  }
+
+  ngOnInit(): void {
+    this.initializeTechStackAnimations();
+  }
+
+  private initializeAnimations(): void {
+    this.animationService.fadeIn('.hero-content', {
+      y: 30,
+      duration: 1,
+      ease: 'power4.out'
+    });
+
+    this.animationService.fadeIn('.hero-title', {
+      duration: 0.8,
+      delay: 0.3,
+      ease: 'power2.out'
+    });
+
+    this.animationService.fadeIn('.hero-subtitle', {
+      duration: 0.8,
+      delay: 0.5,
+      ease: 'power2.out'
+    });
+
+    this.animationService.fadeIn('.hero-description', {
+      duration: 0.8,
+      delay: 0.7,
+      ease: 'power2.out'
+    });
+
+    this.animationService.fadeIn('.tech-stack', {
+      duration: 0.8,
+      delay: 0.9,
+      ease: 'power2.out'
+    });
+
+    this.animationService.fadeIn('.hero-buttons', {
+      duration: 0.8,
+      delay: 1.1,
+      ease: 'power2.out'
+    });
+
+    // Animated gradient on the name
+    this.animationService.animatedGradientText('.hero-name-gradient', {
+      colors: ['#ff6b6b', '#4ecdc4', '#45b7d1'],
+      duration: 6
+    });
+
+    // Floating animation for tech icons (slight, staggered)
+    const techIcons = document.querySelectorAll('.tech-icon') as NodeListOf<HTMLElement>;
+    techIcons.forEach((el, i) => {
+      this.animationService.floatingElementAnimation(el, {
+        floatY: 8 + i,
+        rotation: 0,
+        duration: 3 + i * 0.2,
+        delay: i * 0.05
+      });
+    });
+
+    // Hover effects for CTA buttons
+    const primary = document.querySelector('.cta-primary') as HTMLElement;
+    const secondary = document.querySelector('.cta-secondary') as HTMLElement;
+    if (primary) this.animationService.cardHoverEffect(primary, { scaleAmount: 1.06, shadowIntensity: 18 });
+    if (secondary) this.animationService.cardHoverEffect(secondary, { scaleAmount: 1.04, shadowIntensity: 14 });
+  }
+
+  private initializeTechStackAnimations(): void {
+    const techIcons = document.querySelectorAll('.tech-icon');
+    let index = 0;
+    for (const icon of Array.from(techIcons)) {
+      (icon as HTMLElement).style.setProperty('--delay', index.toString());
+      index++;
+    }
+  }
+
+  private initializeTypedText(): void {
+    const texts = [
+      'Software Developer { Angular | Python | SQL }',
+      '2+ years of professional experience',
+      'Specialized in SPAs and API integration',
+      'Expert in performance optimization',
+      'Passionate about scalable web solutions'
+    ];
+    
+    let currentIndex = 0;
+    let currentText = '';
+    let isDeleting = false;
+    
+    const typeWriter = () => {
+      const fullText = texts[currentIndex];
+      
+      if (isDeleting) {
+        currentText = fullText.substring(0, currentText.length - 1);
+      } else {
+        currentText = fullText.substring(0, currentText.length + 1);
+      }
+      
+      const outputElement = document.getElementById('typed-output');
+      if (outputElement) {
+        outputElement.innerHTML = `${currentText}<span class="cursor">|</span>`;
+      }
+      
+      let typeSpeed = isDeleting ? 30 : 50;
+      
+      if (!isDeleting && currentText === fullText) {
+        typeSpeed = 2000;
+        isDeleting = true;
+      } else if (isDeleting && currentText === '') {
+        isDeleting = false;
+        currentIndex = (currentIndex + 1) % texts.length;
+        typeSpeed = 500;
+      }
+      
+      setTimeout(typeWriter, typeSpeed);
+    };
+    
+    setTimeout(typeWriter, 1000);
+  }
+}

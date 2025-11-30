@@ -1,0 +1,13 @@
+## Claude model configuration for this repository
+# This file is informational and can be used by tooling that reads
+# `.claude` settings. It enables Claude Haiku 4.5 for all clients.
+
+enabled_models:
+  - claude-haiku-4.5
+
+clients: "all"
+
+# Notes:
+# - "clients: \"all\"" indicates the model should be available to all
+#   authorized clients in environments that consume this config.
+# - Update or remove this file only if you intend to change model availability.

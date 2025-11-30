@@ -1,7 +1,20 @@
-import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, effect, inject, PLATFORM_ID, computed, Signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { gsap } from 'gsap';
 
-export type Theme = 'light' | 'dark';
+export type ColorMode = 'light' | 'dark';
+export type ThemeVariant = 'modern' | 'elegant' | 'nature' | 'tech';
+
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  surface: string;
+  text: string;
+  muted: string;
+  border: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -10,102 +23,198 @@ export class ThemeService {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
   
-  private readonly THEME_KEY = 'pranav-portfolio-theme';
+  private readonly THEME_KEY = 'priyanka-portfolio-theme-mode';
+  private readonly VARIANT_KEY = 'priyanka-portfolio-theme-variant';
   
-  // Signal for current theme
-  readonly currentTheme = signal<Theme>('light');
-  
-  // Computed signal for theme classes
-  readonly isDarkMode = signal(false);
+  // Theme State Signals
+  readonly currentMode = signal<ColorMode>('light');
+  readonly currentVariant = signal<ThemeVariant>('modern');
+  readonly isDarkMode = computed(() => this.currentMode() === 'dark');
+
+  // CSS Variable Names
+  private readonly cssVars = {
+    primary: '--color-primary',
+    secondary: '--color-secondary',
+    accent: '--color-accent',
+    background: '--color-background',
+    surface: '--color-surface',
+    text: '--color-text',
+    muted: '--color-muted',
+    border: '--color-border',
+  };
+
+  // Theme Variants Configuration
+  private readonly variants: Record<ThemeVariant, Partial<ThemeColors>> = {
+    modern: {
+      primary: '#0098ff',
+      secondary: '#4f7db5',
+      accent: '#d946ef',
+    },
+    elegant: {
+      primary: '#6366f1',
+      secondary: '#3f3f46',
+      accent: '#ec4899',
+    },
+    nature: {
+      primary: '#059669',
+      secondary: '#0d9488',
+      accent: '#ca8a04',
+    },
+    tech: {
+      primary: '#2563eb',
+      secondary: '#1e293b',
+      accent: '#7c3aed',
+    },
+  };
+
+  // Mode-specific colors
+  private readonly modeColors: Record<ColorMode, Partial<ThemeColors>> = {
+    light: {
+      background: '#ffffff',
+      surface: '#f8fafc',
+      text: '#0f172a',
+      muted: '#64748b',
+      border: '#e2e8f0',
+    },
+    dark: {
+      background: '#0f172a',
+      surface: '#1e293b',
+      text: '#f1f5f9',
+      muted: '#94a3b8',
+      border: '#334155',
+    },
+  };
 
   constructor() {
-    // Initialize theme from localStorage or system preference
-    this.initializeTheme();
-    
-    // Effect to update DOM when theme changes
-    effect(() => {
-      this.updateThemeClass();
-    });
-  }
-
-  private initializeTheme(): void {
-    if (!this.isBrowser) return;
-
-    // Try to get theme from localStorage
-    const savedTheme = localStorage.getItem(this.THEME_KEY) as Theme;
-    
-    if (savedTheme) {
-      this.setTheme(savedTheme);
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.setTheme(prefersDark ? 'dark' : 'light');
-    }
-
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', (e) => {
-        if (!localStorage.getItem(this.THEME_KEY)) {
-          this.setTheme(e.matches ? 'dark' : 'light');
-        }
-      });
-  }
-
-  private updateThemeClass(): void {
-    if (!this.isBrowser) return;
-
-    const theme = this.currentTheme();
-    const htmlElement = document.documentElement;
-    
-    if (theme === 'dark') {
-      htmlElement.classList.add('dark');
-      this.isDarkMode.set(true);
-    } else {
-      htmlElement.classList.remove('dark');
-      this.isDarkMode.set(false);
-    }
-  }
-
-  setTheme(theme: Theme): void {
-    this.currentTheme.set(theme);
-    
     if (this.isBrowser) {
-      localStorage.setItem(this.THEME_KEY, theme);
-    }
-  }
-
-  toggleTheme(): void {
-    // Add smooth transition animation
-    if (this.isBrowser) {
-      const transition = document.createElement('style');
-      transition.innerHTML = `
-        * {
-          transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
-        }
-      `;
-      document.head.appendChild(transition);
+      this.initializeTheme();
       
-      // Remove transition after animation completes
-      setTimeout(() => {
-        document.head.removeChild(transition);
-      }, 300);
+      // Set up effects for theme changes
+      effect(() => {
+        this.applyTheme(this.currentMode(), this.currentVariant());
+      });
     }
-    
-    const newTheme = this.currentTheme() === 'light' ? 'dark' : 'light';
-    this.setTheme(newTheme);
   }
 
-  // Get theme-appropriate colors
-  getThemeColors() {
-    const isDark = this.isDarkMode();
+  // Called by App component to initialize theme
+  initializeTheme(): void {
+    if (this.isBrowser) {
+      // Initialize color mode (light/dark)
+      const savedMode = localStorage.getItem(this.THEME_KEY) as ColorMode | null;
+      const prefersDark = globalThis?.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+      
+      this.currentMode.set(savedMode ?? (prefersDark ? 'dark' : 'light'));
+
+      // Initialize theme variant
+      const savedVariant = localStorage.getItem(this.VARIANT_KEY) as ThemeVariant | null;
+      this.currentVariant.set(savedVariant ?? 'modern');
+
+      // Listen for system theme changes
+      globalThis?.matchMedia?.('(prefers-color-scheme: dark)')
+        ?.addEventListener('change', (e) => {
+          if (!localStorage.getItem(this.THEME_KEY)) {
+            this.setColorMode(e.matches ? 'dark' : 'light');
+          }
+        });
+
+      // Initial theme application
+      this.applyTheme(this.currentMode(), this.currentVariant());
+    }
+  }
+
+  private applyTheme(mode: ColorMode, variant: ThemeVariant): void {
+    if (!this.isBrowser) return;
+
+    const root = document.documentElement;
+    const colors = this.computeThemeColors(mode, variant);
+
+    // Apply color mode class
+    root.classList.toggle('dark', mode === 'dark');
+
+    // Apply CSS variables
+    for (const [key, cssVar] of Object.entries(this.cssVars)) {
+      root.style.setProperty(cssVar, colors[key as keyof ThemeColors]);
+    }
+  }
+
+  private computeThemeColors(mode: ColorMode, variant: ThemeVariant): ThemeColors {
     return {
-      background: isDark ? '#0f172a' : '#ffffff',
-      surface: isDark ? '#1e293b' : '#f8fafc',
-      text: isDark ? '#f1f5f9' : '#0f172a',
-      primary: '#3b82f6',
-      secondary: isDark ? '#64748b' : '#94a3b8',
-      accent: '#8b5cf6',
-      border: isDark ? '#334155' : '#e2e8f0'
-    };
+      ...this.modeColors[mode],
+      ...this.variants[variant],
+    } as ThemeColors;
+  }
+
+  // Public API
+  // initializeTheme(): void {
+  //   if (this.isBrowser) {
+  //     // Initialize color mode (light/dark)
+  //     const savedMode = localStorage.getItem(this.THEME_KEY) as ColorMode | null;
+  //     const prefersDark = globalThis?.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+      
+  //     this.currentMode.set(savedMode ?? (prefersDark ? 'dark' : 'light'));
+
+  //     // Initialize theme variant
+  //     const savedVariant = localStorage.getItem(this.VARIANT_KEY) as ThemeVariant | null;
+  //     this.currentVariant.set(savedVariant ?? 'modern');
+
+  //     // Listen for system theme changes
+  //     globalThis?.matchMedia?.('(prefers-color-scheme: dark)')
+  //       ?.addEventListener('change', (e) => {
+  //         if (!localStorage.getItem(this.THEME_KEY)) {
+  //           this.setColorMode(e.matches ? 'dark' : 'light');
+  //         }
+  //       });
+
+  //     // Initial theme application
+  //     this.applyTheme(this.currentMode(), this.currentVariant());
+  //   }
+  // }
+
+  setColorMode(mode: ColorMode): void {
+    if (this.isBrowser) {
+      this.addTransition();
+      this.currentMode.set(mode);
+      localStorage.setItem(this.THEME_KEY, mode);
+    }
+  }
+
+  setThemeVariant(variant: ThemeVariant): void {
+    if (this.isBrowser) {
+      this.addTransition();
+      this.currentVariant.set(variant);
+      localStorage.setItem(this.VARIANT_KEY, variant);
+    }
+  }
+
+  toggleDarkMode(): void {
+    const newMode = this.currentMode() === 'light' ? 'dark' : 'light';
+    this.setColorMode(newMode);
+  }
+
+  private addTransition(): void {
+    if (!this.isBrowser) return;
+
+    const transition = document.createElement('style');
+    transition.innerHTML = `
+      * {
+        transition: background-color 0.3s ease,
+                    color 0.3s ease,
+                    border-color 0.3s ease,
+                    box-shadow 0.3s ease !important;
+      }
+    `;
+    document.head.appendChild(transition);
+    
+    setTimeout(() => {
+      transition.remove();
+    }, 300);
+  }
+
+  // Helper to get current theme colors
+  getThemeColors(): ThemeColors {
+    return this.computeThemeColors(
+      this.currentMode(),
+      this.currentVariant()
+    );
   }
 }

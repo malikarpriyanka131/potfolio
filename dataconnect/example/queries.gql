@@ -1,0 +1,31 @@
+mutation CreateNewMessage($portfolioId: UUID!, $messageContent: String!, $senderEmail: String!, $senderName: String!, $subject: String!) @auth(level: USER) {
+  message_insert(data: {
+    portfolioId: $portfolioId,
+    messageContent: $messageContent,
+    senderEmail: $senderEmail,
+    senderName: $senderName,
+    subject: $subject,
+    createdAt_expr: "request.time"
+  })
+}
+
+query GetPublicPortfolios @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  portfolios(where: {isPublic: {eq: true}}) {
+    id
+    title
+    description
+    headerImage
+  }
+}
+
+mutation UpdateProjectDescription($id: UUID!, $description: String) @auth(level: USER) {
+  project_update(key: {id: $id}, data: {description: $description})
+}
+
+query ListSkillsForUser($userId: UUID!) @auth(level: USER, insecureReason: "This operation is safe to expose to all logged in users.") {
+  skills(where: {userId: {eq: $userId}}) {
+    id
+    name
+    level
+  }
+}

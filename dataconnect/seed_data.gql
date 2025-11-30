@@ -1,0 +1,74 @@
+mutation CreateSeedData @transaction @auth(level: PUBLIC, insecureReason: "This operation is intended for seeding data and is safe to expose.") {
+  user_insertMany(data: [
+    {
+      id: "6b29c998-b720-4949-9941-ca7b273216cb",
+      displayName: "Demo User 1",
+      email: "demouser1@example.com",
+      createdAt: "2024-01-01T00:00:00Z"
+    },
+    {
+      id: "7f4d65b3-9e2c-4d3a-98b3-a0a6f5a93b1b",
+      displayName: "Demo User 2",
+      email: "demouser2@example.com",
+      createdAt: "2024-01-02T00:00:00Z"
+    }
+  ])
+  portfolio_insertMany(data: [
+    {
+      id: "8a1b9d82-5e4a-413e-88f8-5f9a7a2b4b1c",
+      userId: "6b29c998-b720-4949-9941-ca7b273216cb",
+      title: "Demo Portfolio 1",
+      isPublic: true,
+      createdAt: "2024-01-03T00:00:00Z"
+    },
+    {
+      id: "9c3d5e6f-7a8b-4c5d-a0e9-2c8d6f4b5a3b",
+      userId: "7f4d65b3-9e2c-4d3a-98b3-a0a6f5a93b1b",
+      title: "Demo Portfolio 2",
+      isPublic: false,
+      createdAt: "2024-01-04T00:00:00Z"
+    }
+  ])
+  project_insertMany(data: [
+    {
+      id: "a2e5b8c7-6d9e-4a2f-b1c5-8b7a9d3e2f1a",
+      portfolioId: "8a1b9d82-5e4a-413e-88f8-5f9a7a2b4b1c",
+      title: "Demo Project 1",
+      createdAt: "2024-01-05T00:00:00Z"
+    },
+    {
+      id: "b4c1d3e0-8f6a-4b1c-b3a2-7a9e8d5c4b2b",
+      portfolioId: "9c3d5e6f-7a8b-4c5d-a0e9-2c8d6f4b5a3b",
+      title: "Demo Project 2",
+      createdAt: "2024-01-06T00:00:00Z"
+    }
+  ])
+  projectAsset_insertMany(data: [
+    {
+      id: "c6a7e2f1-5d8c-4b5a-a7d1-9e3b2c5f4b3c",
+      projectId: "a2e5b8c7-6d9e-4a2f-b1c5-8b7a9d3e2f1a",
+      assetUrl: "http://example.com/asset1",
+      assetType: "image",
+      order: 1
+    },
+    {
+      id: "d8b3f4a2-7e5d-4b6c-a9e3-6c8a2d6b5a4a",
+      projectId: "b4c1d3e0-8f6a-4b1c-b3a2-7a9e8d5c4b2b",
+      assetUrl: "http://example.com/asset2",
+      assetType: "video",
+      order: 2
+    }
+  ])
+  skill_insertMany(data: [
+    {
+      id: "e0c9b5d4-9a7e-4b8d-b5d9-7c7f6a5a5b6b",
+      userId: "6b29c998-b720-4949-9941-ca7b273216cb",
+      name: "Demo Skill 1"
+    },
+    {
+      id: "f2a5d8e6-8c6b-4d7a-a5c1-7a9a7b8c6a7a",
+      userId: "7f4d65b3-9e2c-4d3a-98b3-a0a6f5a93b1b",
+      name: "Demo Skill 2"
+    }
+  ])
+}

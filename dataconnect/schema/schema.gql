@@ -1,0 +1,53 @@
+type User @table {
+  email: String!
+  displayName: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  bio: String
+  contactEmail: String
+  websiteUrl: String
+  socialMediaLinks: [String]
+}
+
+type Portfolio @table {
+  user: User!
+  title: String!
+  createdAt: Timestamp!
+  isPublic: Boolean!
+  description: String
+  customDomain: String
+  headerImage: String
+}
+
+type Project @table {
+  portfolio: Portfolio!
+  title: String!
+  createdAt: Timestamp!
+  description: String
+  projectUrl: String
+  completionDate: Date
+  tags: [String]
+}
+
+type ProjectAsset @table {
+  project: Project!
+  assetUrl: String!
+  assetType: String!
+  order: Int!
+  caption: String
+}
+
+type Skill @table {
+  user: User!
+  name: String!
+  level: String
+}
+
+type Message @table {
+  portfolio: Portfolio!
+  senderName: String!
+  senderEmail: String!
+  subject: String!
+  messageContent: String!
+  createdAt: Timestamp!
+}

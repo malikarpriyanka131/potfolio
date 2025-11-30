@@ -1,0 +1,85 @@
+Priyanka Nandkishor Malikar Pune, Maharashtra, India
+Software Developer | Angular| JavaScript| TypeScript| Python | SQL | REST API | Immediate Joiner
+malikarpriyanka7@gmail.com |LinkedIn |GitHub Mobile: +91 7721997413
+
+PROFESSIONAL SUMMARY
+
+Results-driven Software Developer with 2 years of experience specializing in Angular, JavaScript, TypeScript, SQL, REST API
+integration, and Frontend Development . Skilled in building scalable SPAs, improving UI performance, and delivering robust
+user-centric solutions. Hands-on experience in Python for minor automation/API tasks , contributing to workflow efficiency.
+Strong understanding of SDLC, Agile, Microservices (Basic), CI/CD pipelines, Git , and cloud fundamentals. Recognized for
+enhancing performance, reducing manual effort, and delivering reliable, production-ready features.
+
+TECHNICAL SKILLS
+
+Languages : JavaScript, TypeScript, Python, HTML5, CSS3
+Frameworks : Angular, Bootstrap,Tailwind
+Frontend : Component Development, SPA, State Management, API Integration
+Backend : Python APIs, CRUD Operations, SQL Procedures
+Tools : Git, GitHub, GitLab, Postman, VS Code
+Databases : SQL Server, PostgreSQL
+DevOps : Jenkins, Docker, Kubernetes (Basic), CI/CD Pipelines, Nginx
+Cloud : AWS(Basics)
+Methodologies : Agile, Scrum, SDLC
+
+EXPERIENCE
+
+Retransform, An Apex Group Company Jan 2024 – Oct 2025
+Associate Software Developer Mumbai, India
+•Developed and enhanced complex Angular SPA modules including reusable components, shared services, and state
+management.
+•Improved UI performance by 25% through optimized change detection, lazy loading, and code-splitting.
+•Implemented advanced JavaScript/TypeScript logic , custom directives, pipes, and reactive form validations.
+•Consumed backend REST APIs within Angular using HttpClient, interceptors, and RxJS operators for efficient data
+handling.
+•Improved SQL query performance by 30–40% through indexing and query optimization.
+•Contributed to CI/CD pipelines enabling stable and timely production deployments.
+•Used Python for small automation scripts and lightweight API tasks wherever necessary.
+•Collaborated with cross-functional teams to deliver features with a 98% defect-free rate in an Agile environment.
+Self-Employed | Freelance Developer September 2023 – Dec 2023
+Freelance Software Developer Remote
+•Delivered UI improvements, feature enhancements, and bug fixes using React, Angular, JavaScript .
+•Improved client application performance and UX.
+•Tech: Angular, React,JavaScript, HTML5, CSS3
+
+PROJECTS
+
+Purchase Store & Logistics Management System
+•Developed functional modules for purchase and logistics workflows using WordPress.
+•Led a team of 5 developers, ensuring timely delivery and quality output.
+
+Sticky Notes PWA
+
+•Built a PWA with offline caching and instant-load features for fast note-taking.
+
+Mind Trainer Mobile App
+
+•Created an arithmetic logic training app to enhance problem-solving and speed.
+
+e-Kshiralayh Native App
+
+•Developed features for dairy farmer onboarding and livestock product management.
+Computer Lab Auto Controller Deskstop Application
+•Designed automation modules for lab control, access, and monitoring systems.
+
+EDUCATION
+
+B. Tech in Computer Engineering 2023
+Government College of Engineering, Yavatmal (DBATU) CGPA: 9.18
+
+Diploma in Computer Engineering 2020
+GRWP Yavatmal PCT: 90.06%
+
+SSC (10th) 2017
+Babasaheb Deshmukh Vidyalay, Runza PCT: 80.60%
+
+CERTIfiCATIONS
+
+•Smart India Hackathon 2022 — Senior Software Edition (Grand Finalist)
+•Responsive Web Development - FreeCodecamp (Javascript,HTML5,CSS3)
+•Android Development (Java)
+•Android App Development with Kotlin — Top Performer
+•Core Python & Web Designing
+•Oracle Certified Java SE 8
+•Google Analytics for Beginners
+•Entrepreneurship Development

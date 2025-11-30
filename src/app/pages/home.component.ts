@@ -1,43 +1,43 @@
-import { Component, signal, inject, OnInit, afterNextRender } from '@angular/core';
+import { Component, signal, inject, afterNextRender } from '@angular/core';
+import { HeroComponent } from '../components/hero/hero.component';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AnimationService } from '../services/animation.service';
-
-@Component({
+ @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, HeroComponent],
   template: `
 <!-- Hero Section -->
-<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-blue-50 dark:from-secondary-900 dark:via-secondary-800 dark:to-secondary-900">
+<section class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-accent-50 via-primary-50 to-accent-50 dark:from-secondary-900 dark:via-secondary-800 dark:to-secondary-900">
   <!-- Background Elements -->
   <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-r from-primary-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <!-- Reduced size/opacity glows for better readability -->
+    <div class="absolute top-1/4 left-1/4 w-56 h-56 bg-gradient-to-r from-accent-400/10 to-primary-400/10 rounded-full blur-2xl opacity-60 sm:opacity-40"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-72 h-72 bg-gradient-to-r from-primary-400/10 to-accent-400/10 rounded-full blur-2xl opacity-60 sm:opacity-40"></div>
   </div>
   
   <div class="relative z-10 container mx-auto px-6 text-center">
     <div class="hero-content">
-      <!-- Profile Image -->
-      <div class="profile-image mb-8">
+      <!-- Professional Icon -->
+      <div class="profile-icon mb-8">
         <div class="relative w-48 h-48 mx-auto mb-8 group">
-          <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-purple-600 rounded-full animate-spin-slow opacity-75"></div>
-          <div class="absolute inset-2 bg-white dark:bg-secondary-800 rounded-full overflow-hidden">
-            <img src="/assets/resume/Profile.jpeg" 
-                 alt="Pranav Date" 
-                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                 onerror="this.src='/assets/images/default-profile.svg'">
+          <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-purple-600 rounded-full animate-spin-slower opacity-40"></div>
+          <div class="absolute inset-2 bg-white dark:bg-secondary-800 rounded-full overflow-hidden flex items-center justify-center">
+      <img [src]="'/assets/images/New_Passport_1.jpg'" 
+        alt="Priyanka Nandkishor Malikar - Software Developer"
+                 class="w-full h-full object-cover">
           </div>
         </div>
       </div>
       
       <!-- Name and Title -->
-      <h1 class="hero-title text-5xl md:text-7xl font-bold text-gray-900 dark:text-white mb-6">
-        Hi, I'm <span class="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">Pranav</span>
+      <h1 class="hero-title text-5xl md:text-7xl font-bold text-secondary-500 dark:text-white mb-6">
+        Hi, I'm <span class="bg-gradient-to-r from-accent-600 to-primary-600 bg-clip-text text-transparent">Priyanka Nandkishor Malikar</span>
       </h1>
       
       <div class="hero-subtitle mb-8">
-        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-4">
-          Full-Stack Developer & Creative Problem Solver
+        <p class="text-xl md:text-2xl text-white dark:text-gray-300 mb-4">
+          Software Developer | Angular | JavaScript | TypeScript | Python | SQL
         </p>
         <div class="typed-text text-lg text-primary-600 dark:text-primary-400 font-medium h-8">
           <span id="typed-output"></span>
@@ -45,7 +45,7 @@ import { AnimationService } from '../services/animation.service';
       </div>
       
       <!-- Description -->
-      <p class="hero-description text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed">
+      <p class="hero-description text-lg text-white dark:text-gray-300 max-w-3xl mx-auto mb-12 leading-relaxed">
         I craft digital experiences that blend innovative design with robust functionality. 
         Passionate about creating solutions that make a real impact in the digital world.
       </p>
@@ -181,11 +181,11 @@ import { AnimationService } from '../services/animation.service';
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
       @for (project of getFeaturedProjects(); track project.id) {
         <div class="project-card bg-gray-50 dark:bg-secondary-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-2 border border-gray-200 dark:border-secondary-700">
-          <div class="relative overflow-hidden">
-            <img [src]="project.image" [alt]="project.title" 
-                 class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                 onerror="this.src='/assets/images/project-placeholder.svg'">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div class="relative h-48 bg-gradient-to-br from-primary-100 to-purple-100 dark:from-primary-900/20 dark:to-purple-900/20 overflow-hidden flex items-center justify-center">
+            <div class="project-icon text-6xl transform group-hover:scale-110 transition-transform duration-500">
+              {{ project.icon }}
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
           
           <div class="p-6">
@@ -236,7 +236,7 @@ import { AnimationService } from '../services/animation.service';
 <!-- Call to Action -->
 <section class="cta-section py-20 bg-gradient-to-r from-primary-600 to-purple-600">
   <div class="container mx-auto px-6 text-center">
-    <h2 class="text-4xl font-bold text-white mb-4">
+    <h2 class="cta-heading text-4xl font-bold text-white mb-4">
       Ready to Start Your Next Project?
     </h2>
     <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
@@ -252,29 +252,29 @@ import { AnimationService } from '../services/animation.service';
         Get In Touch
       </a>
       
-      <a href="/assets/resume/Pranav-Date-Resume.pdf" target="_blank" 
-         class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-white hover:text-primary-600 hover:scale-105 inline-flex items-center">
+      <a (click)="downloadResume()" 
+         class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:bg-white hover:text-primary-600 hover:scale-105 inline-flex items-center cursor-pointer">
         <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
         Download Resume
-      </a>
-    </div>
+        </a>
+          </div>
   </div>
 </section>
   `,
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   private animationService = inject(AnimationService);
   
   stats = signal({
-    experience: 1,
-    projects: 3,
+    experience: 2,
+    projects: 5,
     clients: 5,
-    technologies: 15
+    technologies: 18
   });
-
+filePath = '../../../../';
   constructor() {
     afterNextRender(() => {
       this.initializeAnimations();
@@ -282,80 +282,145 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    // Component initialization
-  }
+  // ngOnInit removed — initialization handled in constructor/afterNextRender
 
   private initializeAnimations(): void {
-    // Hero section animations
+    // ===== ANIMATION 1: Hero Parallax with Tilt =====
+    const heroSection = document.querySelector('.hero-section') as HTMLElement;
+    if (heroSection) {
+      this.animationService.heroParallaxTilt(heroSection, { intensity: 15, speed: 0.4 });
+    }
+    
+    // Hero content fade-in
     this.animationService.fadeIn('.hero-content', { delay: 0.3 });
-    this.animationService.scaleIn('.profile-image', { delay: 0.5 });
+    this.animationService.scaleIn('.profile-icon', { delay: 0.5 });
     this.animationService.fadeIn('.hero-title', { delay: 0.7 });
     this.animationService.fadeIn('.hero-subtitle', { delay: 0.9 });
     this.animationService.fadeIn('.hero-description', { delay: 1.1 });
     this.animationService.fadeIn('.hero-buttons', { delay: 1.3 });
 
-    // Stats section animations with scroll trigger
-    this.animationService.scrollTriggerAnimation('.stat-item', {
-      trigger: '.stats-section'
+    // ===== ANIMATION 2 & 3: Staggered Card Entrance + Card Hover Effects =====
+    const skillCategories = document.querySelectorAll('.skill-category') as NodeListOf<HTMLElement>;
+    if (skillCategories.length > 0) {
+      // Staggered entrance with rotation
+      this.animationService.staggerCardEntrance(Array.from(skillCategories), {
+        staggerDelay: 0.15,
+        rotation: 3,
+        duration: 0.7
+      });
+      
+      // Card hover effects
+      skillCategories.forEach(category => {
+        this.animationService.cardHoverEffect(category, { scaleAmount: 1.08, shadowIntensity: 25 });
+      });
+    }
+
+    // ===== ANIMATION 6: Statistics Counter with Pulse =====
+    const statItems = document.querySelectorAll('.stat-number') as NodeListOf<HTMLElement>;
+    statItems.forEach((item, index) => {
+      const endValue = Object.values(this.stats())[index] as number;
+      setTimeout(() => {
+        this.animationService.counterWithPulse(item, 0, endValue, {
+          duration: 2.5,
+          suffix: '+',
+          pulseScale: 1.2
+        });
+      }, 800 + index * 150);
     });
 
-    // Skills section animations
-    this.animationService.scrollTriggerAnimation('.skill-category', {
-      trigger: '.skills-preview'
-    });
+    // ===== ANIMATION 5: Floating Icons on Project Cards =====
+    const projectCards = document.querySelectorAll('.project-card') as NodeListOf<HTMLElement>;
+    if (projectCards.length > 0) {
+      // Staggered entrance for project cards
+      this.animationService.staggerCardEntrance(Array.from(projectCards), {
+        staggerDelay: 0.12,
+        rotation: 4,
+        duration: 0.8
+      });
 
-    // Projects section animations
-    this.animationService.scrollTriggerAnimation('.project-card', {
-      trigger: '.projects-preview'
-    });
+      // Floating animation for project icons
+      projectCards.forEach((card, index) => {
+        const icon = card.querySelector('.project-icon') as HTMLElement;
+        if (icon) {
+          this.animationService.floatingElementAnimation(icon, {
+            floatY: 12,
+            rotation: 360,
+            duration: 3.5 + index * 0.3,
+            delay: index * 0.1
+          });
+        }
+        
+        // Card hover effect
+        this.animationService.cardHoverEffect(card, { scaleAmount: 1.06, shadowIntensity: 30 });
+      });
+    }
+
+    // ===== ANIMATION 4: Animated Gradient Text on CTA =====
+    const ctaHeading = document.querySelector('.cta-heading') as HTMLElement;
+    if (ctaHeading) {
+      this.animationService.animatedGradientText(ctaHeading, {
+        colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'],
+        duration: 8
+      });
+    }
 
     // CTA section animation
-    this.animationService.scrollTriggerAnimation('.cta-section');
+    this.animationService.scrollTriggerAnimation('.cta-section', {
+      trigger: '.cta-section',
+      start: "top 80%"
+    });
   }
 
   private initializeTypedText(): void {
     const texts = [
-      'Building Modern Web Applications',
-      'Creating Beautiful User Interfaces',
-      'Developing Scalable Solutions',
-      'Crafting Digital Experiences'
+      'Software Developer { Angular | Python }'
     ];
     
     let currentIndex = 0;
     let currentText = '';
     let isDeleting = false;
-    let typeSpeed = 100;
+    let typeSpeed = 80; // Slightly faster typing
+    let cursorVisible = true;
+    
+    // Add cursor blink animation
+    const toggleCursor = () => {
+      const cursor = document.getElementById('cursor');
+      if (cursor) {
+        cursorVisible = !cursorVisible;
+        cursor.style.opacity = cursorVisible ? '1' : '0';
+      }
+    };
+    setInterval(toggleCursor, 530); // Cursor blink interval
     
     const typeWriter = () => {
       const fullText = texts[currentIndex];
       
       if (isDeleting) {
         currentText = fullText.substring(0, currentText.length - 1);
-        typeSpeed = 50;
+        typeSpeed = 40; // Faster deletion
       } else {
         currentText = fullText.substring(0, currentText.length + 1);
-        typeSpeed = 100;
+        typeSpeed = 80; // Normal typing speed
       }
       
       const outputElement = document.getElementById('typed-output');
       if (outputElement) {
-        outputElement.textContent = currentText;
+        outputElement.innerHTML = currentText + '<span id="cursor" class="opacity-100">|</span>';
       }
       
       if (!isDeleting && currentText === fullText) {
-        typeSpeed = 2000;
+        typeSpeed = 2500; // Longer pause at end
         isDeleting = true;
       } else if (isDeleting && currentText === '') {
         isDeleting = false;
         currentIndex = (currentIndex + 1) % texts.length;
-        typeSpeed = 500;
+        typeSpeed = 700; // Pause before next word
       }
       
       setTimeout(typeWriter, typeSpeed);
     };
     
-    setTimeout(typeWriter, 1500);
+    setTimeout(typeWriter, 1000); // Start sooner
   }
 
   getFeaturedSkills() {
@@ -378,34 +443,70 @@ export class HomeComponent implements OnInit {
     ];
   }
 
+  async downloadResume() {
+    try {
+      const response = await fetch('assets/resume/Priyanka_resume_latest.pdf');
+      const blob = await response.blob();
+      const url = globalThis?.URL?.createObjectURL(blob) ?? '';
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'Priyanka_Resume.pdf';
+      document.body.appendChild(link);
+      link.click();
+  globalThis?.URL?.revokeObjectURL?.(url);
+  // modern DOM removal
+  link.remove();
+    } catch (error) {
+      console.error('Error downloading resume:', error);
+    }
+  }
+
   getFeaturedProjects() {
     return [
       {
         id: 1,
-        title: 'NAVYOJNA',
-        description: 'Indian Navy Dockyard Management System developed with Angular and TypeScript. Improved efficiency through API-based real-time data exchange.',
-        image: '/assets/images/projects/navyojna-preview.jpg',
-        technologies: ['Angular', 'TypeScript', 'Micro Frontend', 'Bootstrap'],
-        liveUrl: 'https://pranavdate8788.github.io/navyojna',
-        githubUrl: 'https://github.com/pranavdate8788/navyojna'
+        title: 'Purchase Store & Logistics Management System',
+        description: 'Developed functional modules for purchase and logistics workflows using WordPress. Led a team of 5 developers ensuring timely delivery and quality output.',
+        icon: '🛒',
+        technologies: ['WordPress', 'PHP', 'JavaScript', 'MySQL'],
+        liveUrl: '#',
+        githubUrl: '#'
       },
       {
         id: 2,
-        title: 'Missile',
-        description: 'Comprehensive module development using PrimeNG components and Angular core concepts with dynamic forms and CRUD operations.',
-        image: '/assets/images/projects/missile-preview.jpg',
-        technologies: ['PrimeNG', 'Angular', 'HTML', 'Forms'],
-        liveUrl: 'https://pranavdate8788.github.io/missile',
-        githubUrl: 'https://github.com/pranavdate8788/missile'
+        title: 'Sticky Notes (PWA)',
+        description: 'Progressive Web App with offline caching and instant-load features for fast note-taking and local persistence.',
+        icon: '🗒️',
+        technologies: ['JavaScript', 'Service Workers', 'HTML5', 'CSS3'],
+        liveUrl: '#',
+        githubUrl: '#'
       },
       {
         id: 3,
-        title: 'MyTutor',
-        description: 'Full-stack one-to-one learning platform built with MERN stack, featuring real-time chat, secure authentication, and course management.',
-        image: '/assets/images/projects/mytutor-preview.jpg',
-        technologies: ['MongoDB', 'Express', 'React', 'NodeJS'],
-        liveUrl: 'https://pranavdate8788.github.io/mytutor',
-        githubUrl: 'https://github.com/pranavdate8788/mytutor'
+        title: 'Mind Trainer',
+        description: 'Arithmetic logic training app designed to enhance problem-solving speed and accuracy with progressive difficulty.',
+        icon: '🧠',
+        technologies: ['JavaScript', 'HTML5', 'CSS3'],
+        liveUrl: '#',
+        githubUrl: '#'
+      },
+      {
+        id: 4,
+        title: 'e-Kshiralayh',
+        description: 'Native app for dairy farmer onboarding and livestock product management, enabling simple registration and product listings.',
+        icon: '🐄',
+        technologies: ['Kotlin', 'Android', 'SQLite'],
+        liveUrl: '#',
+        githubUrl: '#'
+      },
+      {
+        id: 5,
+        title: 'Computer Lab Auto Controller',
+        description: 'Automation modules for controlling and monitoring a computer lab environment, including scheduling and remote control features.',
+        icon: '🖥️',
+        technologies: ['Python', 'Flask', 'SQLite', 'Shell Scripts'],
+        liveUrl: '#',
+        githubUrl: '#'
       }
     ];
   }

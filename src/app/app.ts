@@ -2,6 +2,8 @@ import { Component, signal, inject, OnInit, afterNextRender } from '@angular/cor
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeService } from './services/theme.service';
 import { AnimationService } from './services/animation.service';
+import { TawkService } from './services/tawk.service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +14,11 @@ import { AnimationService } from './services/animation.service';
 export class App implements OnInit {
   private readonly themeService = inject(ThemeService);
   private readonly animationService = inject(AnimationService);
+  private readonly tawkService = inject(TawkService);
   
-  protected readonly title = signal('Pranav Date');
-  protected readonly subtitle = signal('Full Stack Developer & UI/UX Designer');
+  protected readonly title = signal('Priyanka Nandkishor Malikar');
+  protected readonly subtitle = signal('Software Developer | Angular | JavaScript | TypeScript | Python | SQL | REST API');
   protected readonly mobileMenuOpen = signal(false);
-  protected readonly currentTheme = this.themeService.currentTheme;
   protected readonly isDarkMode = this.themeService.isDarkMode;
 
   constructor() {
@@ -27,11 +29,21 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     // Initialize theme
-    this.themeService.setTheme(this.themeService.currentTheme());
+    this.themeService.initializeTheme();
     
     // Show loading animation on initial load
-    if (typeof window !== 'undefined') {
+    if (globalThis.window) {
       this.animationService.pageLoadAnimation();
+    }
+
+    // Initialize tawk.to chat if property id is provided in environment
+    try {
+      const id = environment.tawk?.propertyId;
+      if (id) {
+        this.tawkService.load(id);
+      }
+    } catch (e) {
+      // ignore errors loading chat
     }
   }
 
@@ -42,9 +54,10 @@ export class App implements OnInit {
     this.animationService.slideInRight('.nav-links', { delay: 0.4 });
     
     // Add hover effects to navigation links
-    document.querySelectorAll('.nav-link').forEach(link => {
+    const navLinks = document.querySelectorAll('.nav-link');
+    for (const link of navLinks) {
       this.animationService.hoverScale(link as HTMLElement);
-    });
+    }
   }
   
   protected toggleMobileMenu(): void {
@@ -66,8 +79,8 @@ export class App implements OnInit {
     }
   }
   
-  protected toggleTheme(): void {
-    this.themeService.toggleTheme();
+  protected toggleDarkMode(): void {
+    this.themeService.toggleDarkMode();
   }
   
   protected currentYear(): number {
@@ -81,6 +94,7 @@ export class App implements OnInit {
       { path: '/skills', label: 'Skills', icon: '⚡' },
       { path: '/projects', label: 'Projects', icon: '💼' },
       { path: '/experience', label: 'Experience', icon: '🌟' },
+        { path: '/education', label: 'Education', icon: '🎓' },
       { path: '/contact', label: 'Contact', icon: '📞' }
     ];
   }

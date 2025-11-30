@@ -2,6 +2,10 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
+    {
+        path: 'education',
+        loadComponent: () => import('./pages/education.component').then(m => m.EducationComponent)
+    },
     { 
         path: 'home', 
         loadComponent: () => import('./pages/home.component').then(m => m.HomeComponent)

@@ -1,5 +1,7 @@
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
+Note: Claude Haiku 4.5 is enabled for all clients. See `.claude/config.yaml` for details.
+
 ## TypeScript Best Practices
 
 - Use strict type checking

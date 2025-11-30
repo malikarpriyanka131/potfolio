@@ -60,15 +60,15 @@ interface Statistic {
             <div class="relative group">
               <div class="w-32 h-32 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-1 animate-spin-slow">
                 <div class="w-full h-full rounded-full bg-white dark:bg-secondary-800 flex items-center justify-center">
-                  <span class="text-4xl font-bold text-primary-600 dark:text-white">PD</span>
+                  <span class="text-4xl font-bold text-primary-600 dark:text-white">PM</span>
                 </div>
               </div>
             </div>
             <div>
-              <h1 class="hero-title text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                About <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Pranav</span>
+              <h1 class="hero-title text-4xl md:text-5xl font-bold text-white dark:text-white mb-4">
+                About <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Priyanka Nandkishor Malikar</span>
               </h1>
-              <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed">
+              <p class="text-xl text-white dark:text-gray-300 leading-relaxed">
                 {{personalInfo().description}}
               </p>
             </div>
@@ -303,11 +303,11 @@ interface Statistic {
 export class AboutComponent implements OnInit {
   private animationService = inject(AnimationService);
   
-  personalInfo = signal({
-    description: "Results-driven UI Developer with 10 months of experience in Angular currently working as a UI Trainee at EPPS Infotech Pvt. Ltd. Skilled in building dynamic and responsive web applications, with a keen eye for user experience and performance optimization. Passionate about front-end development, clean code, and continuous learning to enhance UI/UX design and functionality.",
-    email: "pranavdate908@gmail.com",
-    phone: "+91 8788046270",
-    location: "Pune, Maharashtra"
+    personalInfo = signal({
+    description: "Results-driven Software Developer with 2+ years of experience specializing in Angular, JavaScript, TypeScript, SQL, REST API integration, and Frontend Development. Skilled in building scalable SPAs, improving UI performance, and delivering robust user-centric solutions. Hands-on experience with Python for automation, contributing to workflow efficiency. Strong understanding of SDLC, Agile, CI/CD pipelines, and Git. Recognized for enhancing performance, reducing manual effort, and delivering reliable, production-ready features.",
+    email: "malikarpriyanka7@gmail.com",
+    phone: "+91 7721997413",
+    location: "Pune, Maharashtra, India"
   });
 
   constructor() {
@@ -384,39 +384,30 @@ export class AboutComponent implements OnInit {
     return [
       {
         id: 1,
-        degree: "Master of Computer Application (MCA)",
-        institution: "R.C Patel Institute Of Management Research And Development, Shirpur",
-        university: "North Maharashtra University, Jalgoan",
-        duration: "2017 - 2020",
-        percentage: "68.08%",
-        specialization: "Computer Science"
+        degree: "Bachelor of Technology in Computer Engineering",
+        institution: "Government College of Engineering, Yavatmal",
+        university: "DBATU",
+        duration: "2019 - 2023",
+        percentage: "CGPA: 9.18",
+        specialization: "Computer Engineering"
       },
       {
         id: 2,
-        degree: "Bachelor of Computer Applications (BCA)",
-        institution: "Systel Institute Of Management And Research, Dhule",
-        university: "Tilak Maharashtra Vidyapeeth, Pune",
-        duration: "2012 - 2015",
-        percentage: "64.79%",
-        specialization: "Computer Science"
+        degree: "Diploma in Computer Engineering",
+        institution: "GRWP Yavatmal",
+        university: "",
+        duration: "2017 - 2020",
+        percentage: "PCT: 90.06%",
+        specialization: "Computer Engineering"
       },
       {
         id: 3,
-        degree: "Diploma in Computer Hardware Maintenance (CHM'O')",
-        institution: "National Institute of Electronics and Information Technology (NIELIT)",
-        university: "Aurangabad",
-        duration: "2015 - 2016",
-        percentage: "64.50%",
-        specialization: "Computer Hardware"
-      },
-      {
-        id: 4,
-        degree: "Higher Secondary Certificate (HSC)",
-        institution: "Sane Guruji Mahavidyalay Pashte",
-        university: "Nashik Board",
-        duration: "2011 - 2012",
-        percentage: "59.17%",
-        specialization: "Arts Stream"
+        degree: "SSC",
+        institution: "Babasaheb Deshmukh Vidyalay",
+        university: "",
+        duration: "2016 - 2017",
+        percentage: "PCT: 80.60%",
+        specialization: "General"
       }
     ];
   }
@@ -425,21 +416,51 @@ export class AboutComponent implements OnInit {
     return [
       {
         id: 1,
-        title: "JAVA Full stack",
-        provider: "Pentagon Space",
-        duration: "2023"
+        title: "Smart India Hackathon 2022",
+        provider: "Senior Software Edition (Grand Finalist)",
+        duration: "2022"
       },
       {
         id: 2,
-        title: "MERN Full stack",
-        provider: "The Kiran Academy",
-        duration: "2023"
+        title: "Responsive Web Development",
+        provider: "FreeCodeCamp (JavaScript, HTML5, CSS3)",
+        duration: "2022"
       },
       {
         id: 3,
-        title: "Web Development",
-        provider: "Intershala",
-        duration: "2023"
+        title: "Android Development",
+        provider: "Java",
+        duration: "2021"
+      },
+      {
+        id: 4,
+        title: "Android App Development with Kotlin",
+        provider: "Top Performer",
+        duration: "2021"
+      },
+      {
+        id: 5,
+        title: "Core Python & Web Designing",
+        provider: "Certification",
+        duration: "2021"
+      },
+      {
+        id: 6,
+        title: "Oracle Certified Java SE 8",
+        provider: "Oracle",
+        duration: "2020"
+      },
+      {
+        id: 7,
+        title: "Google Analytics for Beginners",
+        provider: "Google",
+        duration: "2020"
+      },
+      {
+        id: 8,
+        title: "Entrepreneurship Development",
+        provider: "Certification",
+        duration: "2020"
       }
     ];
   }
@@ -477,31 +498,31 @@ export class AboutComponent implements OnInit {
     return [
       {
         id: 1,
-        value: 10,
-        label: "Months Experience",
+        value: 2,
+        label: "Years Experience",
         description: "Professional development",
         suffix: "+"
       },
       {
         id: 2,
-        value: 2,
-        label: "Major Projects",
-        description: "Successfully delivered",
+        value: 5,
+        label: "Projects Delivered",
+        description: "Successfully completed",
         suffix: ""
       },
       {
         id: 3,
-        value: 1,
-        label: "SIH Finalist",
-        description: "2022 Achievement",
-        suffix: ""
+        value: 18,
+        label: "Technologies",
+        description: "Mastered & used",
+        suffix: "+"
       },
       {
         id: 4,
-        value: 1,
-        label: "TATA Challenge",
-        description: "Competition Winner",
-        suffix: ""
+        value: 98,
+        label: "Defect-Free Rate",
+        description: "In Agile delivery",
+        suffix: "%"
       }
     ];
   }

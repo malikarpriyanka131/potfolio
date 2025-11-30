@@ -462,11 +462,194 @@ export class AnimationService {
     });
   }
 
+  // Floating hover animation for cards
+  floatingHoverAnimation(element: HTMLElement | string): void {
+    if (!this.isBrowser) return;
+    
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!el) return;
+    
+    const timeline = gsap.timeline({ paused: true });
+    timeline.to(el, {
+      y: -10,
+      duration: 0.4,
+      ease: "power2.out"
+    });
+    
+    el.addEventListener('mouseenter', () => timeline.play());
+    el.addEventListener('mouseleave', () => timeline.reverse());
+  }
+
   // Kill all animations
   killAll(): void {
     if (this.isBrowser) {
       gsap.killTweensOf("*");
       ScrollTrigger.killAll();
     }
+  }
+
+  // ====== 6 PREMIUM ANIMATIONS ======
+
+  // 1. Hero Parallax with Tilt
+  heroParallaxTilt(element: HTMLElement | string, options: { intensity?: number; speed?: number } = {}): void {
+    if (!this.isBrowser) return;
+    
+    const { intensity = 20, speed = 0.5 } = options;
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!el) return;
+    
+    // Parallax scroll
+    this.parallaxScroll(el as HTMLElement, speed);
+    
+    // Tilt on mouse move
+    document.addEventListener('mousemove', (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const rotateX = ((e.clientY - centerY) / rect.height) * intensity;
+      const rotateY = ((e.clientX - centerX) / rect.width) * -intensity;
+      
+      gsap.to(el, {
+        rotationX: rotateX * 0.5,
+        rotationY: rotateY * 0.5,
+        transformOrigin: "center",
+        duration: 0.1,
+        ease: "power1.out",
+        overwrite: "auto"
+      });
+    });
+  }
+
+  // 2. Staggered Card Entrance with Rotation
+  staggerCardEntrance(elements: HTMLElement[] | string, options: { staggerDelay?: number; rotation?: number; duration?: number } = {}): gsap.core.Timeline | null {
+    if (!this.isBrowser) return null;
+    
+    const { staggerDelay = 0.15, rotation = 5, duration = 0.8 } = options;
+    
+    const tl = gsap.timeline();
+    return tl.fromTo(elements,
+      { 
+        opacity: 0, 
+        y: 60,
+        rotation: rotation,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        rotation: 0,
+        scale: 1,
+        duration,
+        ease: "back.out(1.5)",
+        stagger: staggerDelay,
+        scrollTrigger: {
+          trigger: elements,
+          start: "top 75%",
+          toggleActions: "play none none none"
+        }
+      }
+    );
+  }
+
+  // 3. Card Hover Scale + Shadow + Lift
+  cardHoverEffect(element: HTMLElement | string, options: { scaleAmount?: number; shadowIntensity?: number } = {}): void {
+    if (!this.isBrowser) return;
+    
+    const { scaleAmount = 1.08, shadowIntensity = 30 } = options;
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!el) return;
+    
+    const timeline = gsap.timeline({ paused: true });
+    timeline.to(el, {
+      scale: scaleAmount,
+      y: -10,
+      boxShadow: `0 ${shadowIntensity}px ${shadowIntensity * 2}px rgba(99, 102, 241, 0.3)`,
+      duration: 0.3,
+      ease: "power2.out"
+    }, 0);
+    
+    el.addEventListener('mouseenter', () => timeline.play());
+    el.addEventListener('mouseleave', () => timeline.reverse());
+  }
+
+  // 4. Animated Gradient Text with Color Shift
+  animatedGradientText(element: HTMLElement | string, options: { colors?: string[]; duration?: number } = {}): gsap.core.Timeline | null {
+    if (!this.isBrowser) return null;
+    
+    const defaultColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#ff6b6b'];
+    const { colors = defaultColors, duration = 6 } = options;
+    
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!el) return null;
+    
+    const tl = gsap.timeline({ repeat: -1 });
+    
+    colors.forEach((color, index) => {
+      tl.to(el, {
+        backgroundImage: `linear-gradient(90deg, ${color}, ${colors[(index + 1) % colors.length]})`,
+        backgroundClip: "text",
+        WebkitBackgroundClip: "text",
+        color: "transparent",
+        duration: duration / colors.length,
+        ease: "none"
+      });
+    });
+    
+    return tl;
+  }
+
+  // 5. Floating Icon/Element with Rotation
+  floatingElementAnimation(element: HTMLElement | string, options: { floatY?: number; rotation?: number; duration?: number; delay?: number } = {}): gsap.core.Tween | null {
+    if (!this.isBrowser) return null;
+    
+    const { floatY = 15, rotation = 360, duration = 4, delay = 0 } = options;
+    
+    return gsap.to(element, {
+      y: floatY,
+      rotation: rotation,
+      duration,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay,
+      scrollTrigger: {
+        trigger: element,
+        start: "top 80%",
+        toggleActions: "play none none none"
+      }
+    });
+  }
+
+  // 6. Statistics Counter with Pulse
+  counterWithPulse(element: HTMLElement | string, startValue: number, endValue: number, options: { duration?: number; prefix?: string; suffix?: string; pulseScale?: number } = {}): gsap.core.Timeline | null {
+    if (!this.isBrowser) return null;
+    
+    const { duration = 2.5, prefix = '', suffix = '', pulseScale = 1.15 } = options;
+    const tl = gsap.timeline();
+    const obj = { value: startValue };
+    
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    if (!el) return null;
+    
+    // Counter animation
+    tl.to(obj, {
+      value: endValue,
+      duration,
+      ease: "power2.out",
+      onUpdate: () => {
+        el.textContent = prefix + Math.round(obj.value) + suffix;
+      }
+    }, 0);
+    
+    // Pulse animation on completion
+    tl.to(el, {
+      scale: pulseScale,
+      duration: 0.3,
+      ease: "back.out(2)",
+      yoyo: true,
+      repeat: 1
+    }, duration * 0.8);
+    
+    return tl;
   }
 }
