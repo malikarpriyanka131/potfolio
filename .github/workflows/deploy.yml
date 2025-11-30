@@ -29,9 +29,4 @@ jobs:
         run: npm run build
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-          projectId: priyankaportfolio-273d7
-          channelId: live
+        run: npm run build && npx firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project priyankaportfolio-d38c7
